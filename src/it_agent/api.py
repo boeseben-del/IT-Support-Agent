@@ -15,10 +15,15 @@ HAPPYFOX_AUTH_CODE = os.environ.get("HAPPYFOX_AUTH_CODE", "")
 def send_ticket(data, screenshot_bytes=None):
     """Submit an IT support ticket to HappyFox.
     
+    The ticket is created on behalf of the currently logged-in user.
+    The user's name and email (gathered from system info) are passed
+    as the contact for the ticket, so HappyFox associates it with
+    that user.
+    
     Args:
         data: dict with keys: subject, description, priority, name, email,
-              hostname, local_ip, public_ip, cpu_usage, ram_usage, os_info,
-              active_window
+              hostname, local_ip, public_ip, mac_address, cpu_usage,
+              ram_usage, disk_usage, os_info, active_window
         screenshot_bytes: BytesIO buffer with PNG screenshot, or None
     
     Returns:
@@ -26,12 +31,18 @@ def send_ticket(data, screenshot_bytes=None):
     """
     priority_map = {"Low": 1, "Medium": 2, "High": 3}
 
+    user_name = data.get("name", data.get("username", "User"))
+    user_email = data.get("email", "")
+
+    if not user_email or "@" not in user_email:
+        user_email = f"{user_name.lower().replace(' ', '.')}@company.com"
+
     body = {
-        "subject": data.get("subject", "IT Support Request"),
+        "subject": data.get("subject", "OCP IT Help Center Request"),
         "text": _build_description(data),
         "priority": priority_map.get(data.get("priority", "Medium"), 2),
-        "name": data.get("name", data.get("username", "User")),
-        "email": data.get("email", "support@example.com"),
+        "name": user_name,
+        "email": user_email,
         "category": 1,
     }
 
@@ -71,9 +82,11 @@ def _build_description(data):
         f"Username: {data.get('username', 'N/A')}\n"
         f"Local IP: {data.get('local_ip', 'N/A')}\n"
         f"Public IP: {data.get('public_ip', 'N/A')}\n"
+        f"MAC Address: {data.get('mac_address', 'N/A')}\n"
         f"OS: {data.get('os_info', 'N/A')}\n"
         f"CPU Usage: {data.get('cpu_usage', 'N/A')}%\n"
         f"RAM Usage: {data.get('ram_usage', 'N/A')}%\n"
+        f"Disk Usage: {data.get('disk_usage', 'N/A')}%\n"
         f"Active Window: {data.get('active_window', 'N/A')}\n"
     )
 
