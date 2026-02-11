@@ -40,7 +40,7 @@ def send_ticket(data, screenshot_bytes=None):
         return False, "Could not determine your email address. Please contact IT support directly."
 
     body = {
-        "subject": data.get("subject", "OCP IT Help Center Request"),
+        "subject": data.get("subject", "OCP IT Helpdesk Request"),
         "text": _build_description(data),
         "priority": priority_map.get(data.get("priority", "Medium"), 2),
         "name": user_name,
@@ -87,8 +87,11 @@ def _build_description(data):
         f"MAC Address: {data.get('mac_address', 'N/A')}\n"
         f"OS: {data.get('os_info', 'N/A')}\n"
         f"CPU Usage: {data.get('cpu_usage', 'N/A')}%\n"
-        f"RAM Usage: {data.get('ram_usage', 'N/A')}%\n"
+        f"RAM Usage: {data.get('ram_usage', 'N/A')}% (Total: {data.get('total_ram', 'N/A')})\n"
+        f"Logical Processors: {data.get('logical_processors', 'N/A')}\n"
         f"Disk Usage: {data.get('disk_usage', 'N/A')}%\n"
+        f"Uptime: {data.get('uptime', 'N/A')}\n"
+        f"Battery: {data.get('battery', 'N/A')}\n"
         f"Active Window: {data.get('active_window', 'N/A')}\n"
     )
 
