@@ -24,12 +24,12 @@ ctk.set_appearance_mode("dark")
 
 
 def _resource_path(relative_path):
-    """Get absolute path to resource, works for PyInstaller bundled apps."""
-    try:
-        base_path = getattr(sys, '_MEIPASS', None)
-        if base_path is None:
-            base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    except Exception:
+    """Get absolute path to resource, works for PyInstaller and cx_Freeze."""
+    if getattr(sys, '_MEIPASS', None):
+        base_path = sys._MEIPASS
+    elif getattr(sys, 'frozen', False):
+        base_path = os.path.dirname(sys.executable)
+    else:
         base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     return os.path.join(base_path, relative_path)
 
