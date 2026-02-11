@@ -65,9 +65,9 @@ class TrayManager:
                 MenuItem("Quit", self._on_quit),
             )
             self._tray_icon = pystray.Icon(
-                "OCP IT Help Center",
+                "OCP IT Helpdesk",
                 icon_image,
-                "OCP IT Help Center - Press F8",
+                "OCP IT Helpdesk - Press F8",
                 menu,
             )
             self._tray_icon.run()
@@ -109,6 +109,8 @@ class TrayManager:
                 "mac_address": "N/A", "username": "Unknown", "user_email": "",
                 "cpu_usage": 0, "ram_usage": 0, "disk_usage": 0,
                 "os_info": "Unknown", "active_window": "Unknown",
+                "uptime": "N/A", "battery": "N/A",
+                "total_ram": "N/A", "logical_processors": "N/A",
             }
 
         self.app.after(0, self.app.open_ticket_window, sysinfo, screenshot_buf, screenshot_img)
