@@ -85,7 +85,7 @@ if __name__ == "__main__":
 # Options:
 #   --noconsole : Hide the console window (runs as a background app)
 #   --onefile   : Package everything into a single .exe
-#   --name      : Name the output executable "IT_Agent.exe"
+#   --name      : Name the output executable "OCP_IT_Help_Center.exe"
 #
 # The resulting executable will be in the `dist/` folder.
 # =====================================================================
