@@ -42,7 +42,7 @@ build_exe_options = {
 bdist_msi_options = {
     "upgrade_code": "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}",
     "add_to_path": False,
-    "initial_target_dir": r"[ProgramFilesFolder]\OCP_IT_Help_Center",
+    "initial_target_dir": r"[ProgramFilesFolder]\OCP_IT_Helpdesk",
 }
 
 base = None
@@ -53,17 +53,17 @@ executables = [
     Executable(
         "main.py",
         base=base,
-        target_name="OCP_IT_Help_Center.exe",
-        shortcut_name="OCP IT Help Center",
+        target_name="OCP_IT_Helpdesk.exe",
+        shortcut_name="OCP IT Helpdesk",
         shortcut_dir="DesktopFolder",
         icon=None,
     )
 ]
 
 setup(
-    name="OCP IT Help Center",
+    name="OCP IT Helpdesk",
     version="1.0.0",
-    description="OCP IT Help Center - Background desktop tool for capturing screenshots and IT tickets",
+    description="OCP IT Helpdesk - Background desktop tool for capturing screenshots and IT tickets",
     author="OCP IT",
     options={
         "build_exe": build_exe_options,
