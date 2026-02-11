@@ -17,8 +17,8 @@ def create_tray_icon_image(size=64, color=(0, 122, 204)):
         fill=(255, 255, 255),
     )
     draw.text(
-        (size // 4, size // 6),
-        "IT",
+        (size // 6, size // 6),
+        "OCP",
         fill=color,
     )
     return img
@@ -65,9 +65,9 @@ class TrayManager:
                 MenuItem("Quit", self._on_quit),
             )
             self._tray_icon = pystray.Icon(
-                "IT Agent",
+                "OCP IT Help Center",
                 icon_image,
-                "IT Support Agent - Press F8",
+                "OCP IT Help Center - Press F8",
                 menu,
             )
             self._tray_icon.run()
@@ -106,7 +106,8 @@ class TrayManager:
             print(f"[TrayManager] System info gathering failed: {e}")
             sysinfo = {
                 "hostname": "Unknown", "local_ip": "N/A", "public_ip": "N/A",
-                "username": "Unknown", "cpu_usage": 0, "ram_usage": 0,
+                "mac_address": "N/A", "username": "Unknown", "user_email": "",
+                "cpu_usage": 0, "ram_usage": 0, "disk_usage": 0,
                 "os_info": "Unknown", "active_window": "Unknown",
             }
 
