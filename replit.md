@@ -5,7 +5,7 @@ A Windows Desktop Agent built in Python that captures screenshots and creates IT
 
 **Target Platform:** Windows (designed for PyInstaller packaging)  
 **Development Environment:** Replit (Linux) - GUI runs in console/VNC mode for testing  
-**GitHub Repo:** https://github.com/boeseben-del/OCP-IT-Help-Center
+**GitHub Repo:** https://github.com/boeseben-del/OCP-IT-Helpdesk
 
 ## Project Architecture
 
