@@ -17,6 +17,17 @@ from src.it_agent.gui import TicketWindow
 from src.it_agent.tray import TrayManager
 
 
+def _resource_path(relative_path):
+    """Get absolute path to resource, works for PyInstaller and cx_Freeze."""
+    if getattr(sys, '_MEIPASS', None):
+        base_path = sys._MEIPASS
+    elif getattr(sys, 'frozen', False):
+        base_path = os.path.dirname(sys.executable)
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_path, relative_path)
+
+
 class ITAgentApp(ctk.CTk):
     """Main application - hidden root window that hosts the tray and ticket popups."""
 
@@ -26,6 +37,13 @@ class ITAgentApp(ctk.CTk):
         self.geometry("1x1+0+0")
         self.attributes("-alpha", 0)
         self.protocol("WM_DELETE_WINDOW", self.quit_app)
+
+        try:
+            ico_path = _resource_path(os.path.join("assets", "ocp_icon.ico"))
+            if os.path.exists(ico_path):
+                self.iconbitmap(ico_path)
+        except Exception:
+            pass
 
         self._ticket_window = None
         self._tray = TrayManager(self)
