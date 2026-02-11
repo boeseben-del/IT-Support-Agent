@@ -80,12 +80,14 @@ if __name__ == "__main__":
 # =====================================================================
 # To compile this into a standalone Windows executable, run:
 #
-#   pyinstaller --noconsole --onefile --name "OCP_IT_Helpdesk" main.py
+#   pyinstaller --noconsole --onefile --name "OCP_IT_Helpdesk" --icon "assets/ocp_icon.ico" --add-data "assets;assets" main.py
 #
 # Options:
-#   --noconsole : Hide the console window (runs as a background app)
-#   --onefile   : Package everything into a single .exe
-#   --name      : Name the output executable "OCP_IT_Helpdesk.exe"
+#   --noconsole  : Hide the console window (runs as a background app)
+#   --onefile    : Package everything into a single .exe
+#   --name       : Name the output executable "OCP_IT_Helpdesk.exe"
+#   --icon       : Set the application icon
+#   --add-data   : Bundle the assets folder (logo, icons)
 #
 # The resulting executable will be in the `dist/` folder.
 # =====================================================================
