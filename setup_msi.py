@@ -35,7 +35,7 @@ build_exe_options = {
         "src.it_agent.tray",
         "src.it_agent.api",
     ],
-    "include_files": [],
+    "include_files": [("assets", "assets")],
     "excludes": ["test", "unittest"],
 }
 
@@ -56,7 +56,7 @@ executables = [
         target_name="OCP_IT_Helpdesk.exe",
         shortcut_name="OCP IT Helpdesk",
         shortcut_dir="DesktopFolder",
-        icon=None,
+        icon="assets/ocp_icon.ico",
     )
 ]
 
