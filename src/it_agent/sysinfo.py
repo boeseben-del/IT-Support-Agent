@@ -57,9 +57,11 @@ def get_ram_usage():
 
 def get_disk_usage():
     try:
-        disk = psutil.disk_usage('/')
         if platform.system() == "Windows":
-            disk = psutil.disk_usage('C:\\')
+            drive = os.environ.get("SystemDrive", "C:")
+            disk = psutil.disk_usage(drive + "\\")
+        else:
+            disk = psutil.disk_usage('/')
         return disk.percent
     except Exception:
         return 0.0
@@ -103,7 +105,28 @@ def get_active_window_title():
 
 
 def get_user_email():
-    """Attempt to get the logged-in user's email from Windows."""
+    """Attempt to get the logged-in user's email from Windows.
+    
+    Tries multiple sources in order:
+    1. whoami /upn (Azure AD / domain UPN - most reliable)
+    2. Office 365 registry identity
+    3. Windows account email from registry
+    """
+    if platform.system() != "Windows":
+        return ""
+
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["whoami", "/upn"],
+            capture_output=True, text=True, timeout=5
+        )
+        upn = result.stdout.strip()
+        if upn and "@" in upn:
+            return upn
+    except Exception:
+        pass
+
     try:
         import subprocess
         result = subprocess.run(
@@ -121,12 +144,12 @@ def get_user_email():
         import subprocess
         result = subprocess.run(
             ["powershell", "-Command",
-             "([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"],
+             "(Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\IdentityCRL\\UserExtendedProperties\\*' -ErrorAction SilentlyContinue | Select-Object -First 1).PSChildName"],
             capture_output=True, text=True, timeout=5
         )
-        identity = result.stdout.strip()
-        if identity:
-            return identity
+        email = result.stdout.strip()
+        if email and "@" in email:
+            return email
     except Exception:
         pass
 
