@@ -1,4 +1,4 @@
-# OCP IT Help Center
+# OCP IT Helpdesk
 
 ## Overview
 A Windows Desktop Agent built in Python that captures screenshots and creates IT support tickets via a global hotkey (F8). The app runs silently in the system tray and pops up a modern ticket form when triggered. Tickets are submitted to HappyFox under the logged-in user's identity.
@@ -18,7 +18,7 @@ setup_msi.py                # cx_Freeze MSI build configuration
 src/
   it_agent/
     __init__.py
-    sysinfo.py              # System info: hostname, IP, MAC, CPU, RAM, disk, OS version
+    sysinfo.py              # System info: hostname, IP, MAC, CPU, RAM, disk, OS, uptime, battery
     screenshot.py           # Screenshot capture and thumbnail utilities
     gui.py                  # CustomTkinter ticket form UI (TicketWindow)
     tray.py                 # System tray icon and F8 hotkey listener (TrayManager)
@@ -31,19 +31,22 @@ src/
 - **keyboard** - Global hotkey listener (F8)
 - **pyautogui / PIL** - Screenshot capture
 - **requests** - HTTP API calls to HappyFox
-- **psutil** - CPU/RAM/disk usage monitoring
+- **psutil** - CPU/RAM/disk usage, uptime, battery monitoring
 - **cx_Freeze** - MSI installer generation (build only)
 
 ### System Info Gathered
 - Hostname, Local IP, Public IP, MAC Address
-- CPU Usage %, RAM Usage %, Disk Usage %
+- CPU Usage %, RAM Usage % (+ Total RAM), Disk Usage %
+- Logical Processor Count
+- System Uptime (days/hours/minutes)
+- Battery Status (percent + charging/on battery)
 - OS (correctly detects Windows 11 via build number)
 - Active Window Title, Current Username, User Email
 
 ### Flow
 1. App starts silently -> minimizes to system tray
 2. User presses F8 -> screenshot captured immediately -> ticket form opens
-3. Form auto-fills system info, shows screenshot thumbnail
+3. Form auto-fills system info (including uptime), shows screenshot thumbnail
 4. User fills description, sets priority, submits
 5. Ticket sent to HappyFox API under the logged-in user's identity
 
@@ -61,7 +64,7 @@ python setup_msi.py bdist_msi
 
 Standalone EXE (PyInstaller):
 ```
-pyinstaller --noconsole --onefile --name "OCP_IT_Help_Center" main.py
+pyinstaller --noconsole --onefile --name "OCP_IT_Helpdesk" main.py
 ```
 
 ### GitHub Actions Build
@@ -73,13 +76,14 @@ The `.github/workflows/build-msi.yml` workflow automatically builds both MSI and
 - 2026-02-11: Pushed code to GitHub repo, created MSI build workflow
 - 2026-02-11: Added MAC address and disk usage to system info
 - 2026-02-11: Fixed Windows 11 detection (build number check)
-- 2026-02-11: Rebranded to "OCP IT Help Center"
+- 2026-02-11: Rebranded to "OCP IT Helpdesk"
 - 2026-02-11: Submit button moved to bottom right, made more prominent
 - 2026-02-11: Tickets now created under the logged-in user's identity
+- 2026-02-11: Added system uptime, battery status, total RAM, logical processor count
 
 ## User Preferences
 - Modern dark theme UI (DarkBlue)
 - Professional, clean layout
 - Windows-focused deployment
 - GitHub-based CI/CD for MSI compilation
-- Branding: OCP IT Help Center
+- Branding: OCP IT Helpdesk
