@@ -40,7 +40,7 @@ class TicketWindow(ctk.CTkToplevel):
     def __init__(self, master, sysinfo, screenshot_buf, screenshot_img):
         super().__init__(master)
         self.title("OCP IT Helpdesk")
-        self.geometry("620x820")
+        self.geometry("620x780")
         self.resizable(False, False)
         self.attributes("-topmost", True)
         self.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -51,69 +51,49 @@ class TicketWindow(ctk.CTkToplevel):
         self.screenshot_img = screenshot_img
         self.screenshot_removed = False
         self._tk_thumb = None
-        self._tk_logo = None
 
         self._build_ui()
         self.after(100, lambda: self.focus_force())
 
     def _build_ui(self):
-        pad = {"padx": 20, "pady": (5, 5)}
-
-        header_frame = ctk.CTkFrame(self, fg_color=OCP_NAVY, corner_radius=0, height=80)
+        header_frame = ctk.CTkFrame(self, fg_color=OCP_NAVY, corner_radius=0, height=60)
         header_frame.pack(fill="x")
         header_frame.pack_propagate(False)
 
         header_inner = ctk.CTkFrame(header_frame, fg_color="transparent")
         header_inner.pack(expand=True, fill="both", padx=20)
 
-        try:
-            logo_path = _resource_path(os.path.join("assets", "ocp_logo.png"))
-            if os.path.exists(logo_path):
-                logo_img = Image.open(logo_path).convert("RGBA")
-                logo_height = 50
-                ratio = logo_height / logo_img.height
-                logo_width = int(logo_img.width * ratio)
-                logo_img = logo_img.resize((logo_width, logo_height), Image.LANCZOS)
-                self._tk_logo = ImageTk.PhotoImage(logo_img)
-                logo_label = ctk.CTkLabel(header_inner, image=self._tk_logo, text="")
-                logo_label.pack(side="left", pady=15)
-        except Exception:
-            pass
-
-        title_frame = ctk.CTkFrame(header_inner, fg_color="transparent")
-        title_frame.pack(side="right", pady=15)
-
         ctk.CTkLabel(
-            title_frame, text="IT Helpdesk",
-            font=ctk.CTkFont(size=22, weight="bold"),
+            header_inner, text="OCP IT Helpdesk",
+            font=ctk.CTkFont(size=20, weight="bold"),
             text_color="white",
-        ).pack(anchor="e")
+        ).pack(side="left", pady=15)
 
         ctk.CTkLabel(
-            title_frame, text="Support Ticket",
-            font=ctk.CTkFont(size=12),
+            header_inner, text="Support Ticket",
+            font=ctk.CTkFont(size=13),
             text_color=OCP_CYAN,
-        ).pack(anchor="e")
+        ).pack(side="right", pady=15)
 
         accent_bar = ctk.CTkFrame(self, fg_color=OCP_BLUE, height=3, corner_radius=0)
         accent_bar.pack(fill="x")
 
-        scroll_frame = ctk.CTkFrame(self, fg_color="transparent")
-        scroll_frame.pack(fill="both", expand=True, padx=0, pady=0)
+        content = ctk.CTkFrame(self, fg_color="transparent")
+        content.pack(fill="both", expand=True, padx=0, pady=0)
 
-        info_card = ctk.CTkFrame(scroll_frame, fg_color=OCP_CARD_BG, corner_radius=8)
-        info_card.pack(fill="x", padx=20, pady=(15, 8))
+        info_card = ctk.CTkFrame(content, fg_color=OCP_CARD_BG, corner_radius=8)
+        info_card.pack(fill="x", padx=20, pady=(12, 6))
 
         info_header = ctk.CTkFrame(info_card, fg_color="transparent")
-        info_header.pack(fill="x", padx=15, pady=(10, 5))
+        info_header.pack(fill="x", padx=15, pady=(8, 4))
         ctk.CTkLabel(
             info_header, text="System Information",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color=OCP_CYAN,
         ).pack(side="left")
 
         info_grid = ctk.CTkFrame(info_card, fg_color="transparent")
-        info_grid.pack(fill="x", padx=15, pady=(0, 10))
+        info_grid.pack(fill="x", padx=15, pady=(0, 8))
 
         left_col = ctk.CTkFrame(info_grid, fg_color="transparent")
         left_col.pack(side="left", fill="x", expand=True)
@@ -139,22 +119,22 @@ class TicketWindow(ctk.CTkToplevel):
             ctk.CTkLabel(right_col, text=text, font=ctk.CTkFont(size=11), text_color=OCP_TEXT_DIM, anchor="w").pack(anchor="w", pady=1)
 
         if self.screenshot_img is not None:
-            ss_card = ctk.CTkFrame(scroll_frame, fg_color=OCP_CARD_BG, corner_radius=8)
-            ss_card.pack(fill="x", padx=20, pady=(8, 8))
+            ss_card = ctk.CTkFrame(content, fg_color=OCP_CARD_BG, corner_radius=8)
+            ss_card.pack(fill="x", padx=20, pady=(6, 6))
 
             ss_header = ctk.CTkFrame(ss_card, fg_color="transparent")
-            ss_header.pack(fill="x", padx=15, pady=(10, 5))
+            ss_header.pack(fill="x", padx=15, pady=(8, 4))
             ctk.CTkLabel(
                 ss_header, text="Screenshot",
-                font=ctk.CTkFont(size=13, weight="bold"),
+                font=ctk.CTkFont(size=12, weight="bold"),
                 text_color=OCP_CYAN,
             ).pack(side="left")
 
-            thumb = image_to_thumbnail(self.screenshot_img, max_height=130)
+            thumb = image_to_thumbnail(self.screenshot_img, max_height=110)
             self._tk_thumb = ImageTk.PhotoImage(thumb)
 
             thumb_container = ctk.CTkFrame(ss_card, fg_color=OCP_INPUT_BG, corner_radius=6)
-            thumb_container.pack(padx=15, pady=(0, 5))
+            thumb_container.pack(padx=15, pady=(0, 4))
             self.thumb_label = ctk.CTkLabel(thumb_container, image=self._tk_thumb, text="")
             self.thumb_label.pack(padx=5, pady=5)
 
@@ -170,20 +150,46 @@ class TicketWindow(ctk.CTkToplevel):
                 hover_color=OCP_NAVY,
                 border_color=OCP_SILVER,
             )
-            self.remove_ss_check.pack(anchor="w", padx=15, pady=(0, 10))
+            self.remove_ss_check.pack(anchor="w", padx=15, pady=(0, 8))
 
-        form_card = ctk.CTkFrame(scroll_frame, fg_color=OCP_CARD_BG, corner_radius=8)
-        form_card.pack(fill="x", padx=20, pady=(8, 8))
+        form_card = ctk.CTkFrame(content, fg_color=OCP_CARD_BG, corner_radius=8)
+        form_card.pack(fill="x", padx=20, pady=(6, 6))
+
+        email_row = ctk.CTkFrame(form_card, fg_color="transparent")
+        email_row.pack(fill="x", padx=15, pady=(10, 6))
 
         ctk.CTkLabel(
-            form_card, text="Subject",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            email_row, text="Your Email",
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color=OCP_TEXT,
-        ).pack(anchor="w", padx=15, pady=(12, 4))
+        ).pack(anchor="w")
+
+        self.email_entry = ctk.CTkEntry(
+            email_row, height=34,
+            placeholder_text="your.name@company.com",
+            fg_color=OCP_INPUT_BG,
+            border_color=OCP_BLUE,
+            text_color=OCP_TEXT,
+            placeholder_text_color=OCP_TEXT_DIM,
+        )
+        self.email_entry.pack(fill="x", pady=(3, 0))
+
+        detected_email = self.sysinfo.get("user_email", "")
+        if detected_email and "@" in detected_email:
+            self.email_entry.insert(0, detected_email)
+
+        subj_row = ctk.CTkFrame(form_card, fg_color="transparent")
+        subj_row.pack(fill="x", padx=15, pady=(6, 6))
+
+        ctk.CTkLabel(
+            subj_row, text="Subject",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color=OCP_TEXT,
+        ).pack(anchor="w")
 
         default_subject = f"Support Request from {self.sysinfo['username']} on {self.sysinfo['hostname']}"
         self.subject_entry = ctk.CTkEntry(
-            form_card, width=550, height=36,
+            subj_row, height=34,
             placeholder_text="Subject line...",
             fg_color=OCP_INPUT_BG,
             border_color=OCP_BLUE,
@@ -191,37 +197,43 @@ class TicketWindow(ctk.CTkToplevel):
             placeholder_text_color=OCP_TEXT_DIM,
         )
         self.subject_entry.insert(0, default_subject)
-        self.subject_entry.pack(padx=15, pady=(0, 8))
+        self.subject_entry.pack(fill="x", pady=(3, 0))
+
+        desc_row = ctk.CTkFrame(form_card, fg_color="transparent")
+        desc_row.pack(fill="x", padx=15, pady=(6, 6))
 
         ctk.CTkLabel(
-            form_card, text="Description",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            desc_row, text="Description",
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color=OCP_TEXT,
-        ).pack(anchor="w", padx=15, pady=(8, 4))
+        ).pack(anchor="w")
 
         self.desc_text = ctk.CTkTextbox(
-            form_card, width=550, height=120,
+            desc_row, height=100,
             fg_color=OCP_INPUT_BG,
             border_color=OCP_BLUE,
             text_color=OCP_TEXT,
             border_width=1,
         )
-        self.desc_text.pack(padx=15, pady=(0, 8))
+        self.desc_text.pack(fill="x", pady=(3, 0))
+
+        priority_row = ctk.CTkFrame(form_card, fg_color="transparent")
+        priority_row.pack(fill="x", padx=15, pady=(6, 12))
 
         ctk.CTkLabel(
-            form_card, text="Priority",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            priority_row, text="Priority",
+            font=ctk.CTkFont(size=12, weight="bold"),
             text_color=OCP_TEXT,
-        ).pack(anchor="w", padx=15, pady=(8, 4))
+        ).pack(anchor="w", pady=(0, 4))
 
         self.priority_var = ctk.StringVar(value="Medium")
-        priority_frame = ctk.CTkFrame(form_card, fg_color="transparent")
-        priority_frame.pack(fill="x", padx=15, pady=(0, 12))
+        btn_frame = ctk.CTkFrame(priority_row, fg_color="transparent")
+        btn_frame.pack(anchor="w")
 
         priority_colors = {"Low": OCP_CYAN, "Medium": OCP_BLUE, "High": "#E74C3C"}
         for val in ("Low", "Medium", "High"):
             ctk.CTkRadioButton(
-                priority_frame, text=val,
+                btn_frame, text=val,
                 variable=self.priority_var, value=val,
                 font=ctk.CTkFont(size=12),
                 text_color=OCP_TEXT,
@@ -230,7 +242,7 @@ class TicketWindow(ctk.CTkToplevel):
                 hover_color=priority_colors[val],
             ).pack(side="left", padx=(0, 25))
 
-        footer = ctk.CTkFrame(self, fg_color=OCP_DARK_BG, height=65)
+        footer = ctk.CTkFrame(self, fg_color=OCP_DARK_BG, height=60)
         footer.pack(fill="x", side="bottom")
         footer.pack_propagate(False)
 
@@ -244,7 +256,7 @@ class TicketWindow(ctk.CTkToplevel):
         self.status_label.pack(side="left", fill="x", expand=True)
 
         self.submit_btn = ctk.CTkButton(
-            footer_inner, text="Submit Request", width=200, height=42,
+            footer_inner, text="Submit Request", width=200, height=40,
             font=ctk.CTkFont(size=15, weight="bold"),
             fg_color=OCP_BLUE,
             hover_color=OCP_NAVY,
@@ -264,9 +276,14 @@ class TicketWindow(ctk.CTkToplevel):
             self.screenshot_removed = False
 
     def _on_submit(self):
+        email = self.email_entry.get().strip()
         subject = self.subject_entry.get().strip()
         description = self.desc_text.get("1.0", "end").strip()
 
+        if not email or "@" not in email:
+            self.status_label.configure(text="A valid email address is required.", text_color="#E74C3C")
+            self.email_entry.focus()
+            return
         if not subject:
             self.status_label.configure(text="Subject is required.", text_color="#E74C3C")
             return
@@ -282,7 +299,7 @@ class TicketWindow(ctk.CTkToplevel):
             "description": description,
             "priority": self.priority_var.get(),
             "name": self.sysinfo.get("username", "User"),
-            "email": self.sysinfo.get("user_email", ""),
+            "email": email,
             **self.sysinfo,
         }
 
