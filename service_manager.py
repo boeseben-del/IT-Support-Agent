@@ -74,11 +74,12 @@ def install_service():
             print(f"ERROR: {result.stdout} {result.stderr}")
             return False
     else:
+        quoted_path = f'"\"{exe}\""'
         code, out, err = run_sc(
             "create", SERVICE_NAME,
-            f"binPath={exe}",
-            f"DisplayName={SERVICE_DISPLAY}",
-            "start=auto",
+            f"binPath= {quoted_path}",
+            f"DisplayName= {SERVICE_DISPLAY}",
+            "start=", "auto",
         )
         if code == 0:
             run_sc("description", SERVICE_NAME,
